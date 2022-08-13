@@ -1,0 +1,433 @@
+Warning: importing 'simtk.openmm' is deprecated.  Import 'openmm' instead.
+SMIRNOFF functions will be replaced with cached versions to improve their performance.
+#======================================================================#
+#| [1m            Welcome to ForceBalance version 1.9.0! =D             [0m |#
+#| [1m                 Force Field Optimization System                  [0m |#
+#| [1m                                                                  [0m |#
+#| [1m                             Authors:                             [0m |#
+#| [1m                          Lee-Ping Wang                           [0m |#
+#| [1m                  Yudong Qiu, Keri A. McKiernan                   [0m |#
+#| [1m          Jeffrey R. Wagner, Hyesu Jang, Simon Boothroyd          [0m |#
+#| [1m          Arthur Vigil, Erik G. Brandt, John Stoppelman           [0m |#
+#| [1m                  Johnny Israeli, Matt Thompson                   [0m |#
+#======================================================================#
+
+                          [44m     [0m                                        
+                       [44m        [0m      [43m     [0m                              
+                    [44m        [0m   [44m  [0m    [43m         [0m                          
+                 [44m       [0m    [44m      [0m      [43m         [0m                       
+             [44m        [0m    [44m        [0m          [43m         [0m                    
+          [44m        [0m    [44m        [0m                 [43m        [0m                 
+       [44m        [0m    [44m       [0m                        [43m        [0m              
+    [44m        [0m   [44m        [0m                              [43m         [0m          
+   [44m      [0m   [44m        [0m               `.:+@@###@'          [43m         [0m       
+    [44m [0m    [44m        [0m          ,;'+###############.             [43m     [0m       
+      [44m        [0m         +################':`                    [43m [0m        
+      [44m     [0m              `.,,...####+.                                  
+                                ,#####      +##.               [44m   [0m   [44m   [0m
+ [43m    [0m                            #####      ######             [44m   [0m   [44m   [0m
+ [43m    [0m                ###'        ####'     :#####'             [44m   [0m   [44m   [0m
+ [43m    [0m                :####@      ####.    ,####'               [44m   [0m   [44m   [0m
+ [43m    [0m                 ######     ####    +###+                 [44m   [0m   [44m   [0m
+ [43m    [0m                  #####     ####   ###;                   [44m   [0m   [44m   [0m
+ [43m    [0m                   :##      ####  ++`                     [44m   [0m   [44m   [0m
+ [43m    [0m                            ####``..:;+##############+`   [44m   [0m   [44m   [0m
+ [43m    [0m             .,:;;'++##################################`  [44m   [0m   [44m   [0m
+ [43m    [0m    `############################++++''';;;;;;;;;;;'';    [44m   [0m   [44m   [0m
+ [43m    [0m      ,########':,.``       ####                          [44m   [0m   [44m   [0m
+ [43m    [0m                            ####                          [44m   [0m   [44m   [0m
+ [43m    [0m                            ####                          [44m   [0m   [44m   [0m
+ [43m    [0m                            ####                          [44m   [0m   [44m   [0m
+ [43m    [0m                            ####                          [44m   [0m   [44m   [0m
+ [43m    [0m                            ####                          [44m   [0m   [44m   [0m
+ [43m    [0m                            ####                          [44m   [0m   [44m   [0m
+ [43m    [0m                            ####                          [44m   [0m   [44m   [0m
+      [44m    [0m                       ####                                   
+     [44m        [0m                    ####                                   
+    [44m [0m    [44m       [0m                 ####                       [43m     [0m       
+   [44m     [0m    [44m        [0m             ####                    [43m        [0m       
+   [44m        [0m    [44m        [0m          ###                  [43m         [0m         
+      [44m        [0m    [44m        [0m        +`               [43m        [0m             
+          [44m        [0m   [44m        [0m                   [43m        [0m                
+             [44m        [0m   [44m         [0m           [43m         [0m                   
+                [44m        [0m    [44m       [0m      [43m         [0m                      
+                   [44m        [0m    [44m   [0m    [43m        [0m                          
+                      [44m        [0m       [43m      [0m                             
+                          [44m      [0m      [43m  [0m                                
+                             [44m  [0m                                         
+
+Reading options from file: optimize.in
+#========================================================#
+#| [95m  Options at their default values are not printed   [0m |#
+#| [95m        Use 'verbose_options True' to Enable        [0m |#
+#========================================================#
+Reading force field from file: openff-2.0.0-GBSA_OBC2-tagged.offxml
+#=========================================================#
+#| [92m Starting parameter indices, physical values and IDs [0m |#
+#=========================================================#
+   0 [  1.5000e-01 ] : GBSA/Atom/radius/[#8:1]
+-----------------------------------------------------------
+#=========================================================#
+#| [91m Rescaling Factors by Type (Lower Takes Precedence): [0m |#
+#=========================================================#
+   GBSA/Atom/radius                     : 5.00000e-02
+-----------------------------------------------------------
+#========================================================#
+#| [91m   Rescaling Types / Factors by Parameter Number:   [0m |#
+#========================================================#
+   0 [    GBSA/Atom/radius              : 5.00000e-02 ] : GBSA/Atom/radius/[#8:1]
+----------------------------------------------------------
+#========================================================#
+#| [92m               Setup for force field                [0m |#
+#========================================================#
+fnms                      ['openff-2.0.0-GBSA_OBC2-tagged.offxml'] 
+priors                    OrderedDict([('GBSA/Atom/radius', 0.05)]) 
+----------------------------------------------------------
+Backing up: optimize.tmp/host_guest_data to: optimize.bak/host_guest_data_5.tar.bz2
+targets/host_guest_data/options.json
+#========================================================#
+#| [92m             Loaded experimental data.              [0m |#
+#========================================================#
+#=================================================================================================================================================================================================================================================================================================================================================================#
+#| [92m Reference C([C@@H]1[C@@H]2[C@@H]([C@H]([C@H](O1)O[C@@H]3[C@H](O[C@@H]([C@@H]([C@H]3O)O)O[C@@H]4[C@H](O[C@@H]([C@@H]([C@H]4O)O)O[C@@H]5[C@H](O[C@@H]([C@@H]([C@H]5O)O)O[C@@H]6[C@H](O[C@@H]([C@@H]([C@H]6O)O)O[C@@H]7[C@H](O[C@@H]([C@@H]([C@H]7O)O)O[C@@H]8[C@H](O[C@H](O2)[C@@H]([C@H]8O)O)CO)CO)CO)CO)CO)CO)O)O)O{rec}{n=1}|CCCCCC(=O)[O-]{lig}{n=1} data [0m |#
+#=================================================================================================================================================================================================================================================================================================================================================================#
+HostGuestBindingAffinity 298.15 K-1 atm -2.280114722753346 kcal / mol+/-0.02987571701720841 kcal / mol 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#========================================================#
+#| [92m         Setup for target host_guest_data :         [0m |#
+#========================================================#
+name                      host_guest_data 
+type                      EVALUATOR_SMIRNOFF 
+tgtdir                    targets/host_guest_data 
+evaluator_input           options.json 
+----------------------------------------------------------
+#========================================================#
+#| [92m        SMIRNOFF Parameter Coverage Analysis        [0m |#
+#========================================================#
+Force field assignment data written to /scratch/jsetiadi/GBSA-bcd/tutorial/smirnoff_parameter_assignments.json
+ idx Parameter                                                                                                   Count
+----------------------------------------------------------------------------------------------------------------------
+   0 GBSA/Atom/radius/[#8:1]                                                                              :          0
+SNIRNOFF Parameter Coverage Analysis result: 0/1 parameters are covered.
+----------------------------------------------------------------------------------------------------------------------
+Using parabolic regularization (Gaussian prior) with strength 1.0e+00 (+), 0.0e+00 (x)
+#========================================================#
+#| [92m           Setup for objective function :           [0m |#
+#========================================================#
+penalty_additive          1.0 
+normalize_weights         False 
+----------------------------------------------------------
+#========================================================#
+#| [92m                Setup for optimizer                 [0m |#
+#========================================================#
+jobtype                   OPTIMIZE 
+trust0                    0.25 
+mintrust                  0.05 
+eps                       0.01 
+convergence_objective     0.1 
+convergence_step          0.1 
+convergence_gradient      0.1 
+maxstep                   10 
+adapt_fac                 0.2 
+adapt_damp                1.0 
+print_hess                True 
+err_tol                   1.0 
+input_file                optimize.in 
+----------------------------------------------------------
+Calculation started at 2022-07-19 09:30 AM
+#========================================================#
+#| [1m                  Main Optimizer                    [0m |#
+#| [1m   Newton-Raphson Method (Adaptive Trust Radius)    [0m |#
+#| [1m                                                    [0m |#
+#| [1m       [0mConvergence criteria (1 of 3 needed):        [0m |#
+#| [1m          [0mObjective Function  : 1.000e-01           [0m |#
+#| [1m          [0mNorm of Gradient    : 1.000e-01           [0m |#
+#| [1m          [0mParameter step size : 1.000e-01           [0m |#
+#========================================================#
+#========================================================#
+#|       Color Key for Objective Function -=X2=-        |#
+#|  [1mBold[0m = Initial step                                 |#
+#|  [92mGreen = Current lowest value of objective function[0m  |#
+#|  [91mRed = Objective function rises, step rejected[0m       |#
+#|  [0mNo color = Not at the lowest value                  |#
+#========================================================#
+#========================================================#
+#| [94m     Iteration 0: Evaluating objective function     [0m |#
+#| [94m        and derivatives through second order        [0m |#
+#========================================================#
+Requesting the estimation of 1 properties, and their gradients with respect to 1 parameters.
+
+1 properties were estimated using the SimulationLayer layer.
+
+
+#=============================================================================================================#
+#| [1;94m                                host_guest_data HostGuestBindingAffinity                                 [0m |#
+#| [1;94m Temperature  Pressure Substance  Reference  Calculated +- Stdev     Delta    Weight    Denom     Term   [0m |#
+#=============================================================================================================#
+  298.15 K 1 atm C([C@@H]1[C@@H]2[C@@H]([C@H]([C@H](O1)O[C@@H]3[C@H](O[C@@H]([C@@H]([C@H]3O)O)O[C@@H]4[C@H](O[C@@H]([C@@H]([C@H]4O)O)O[C@@H]5[C@H](O[C@@H]([C@@H]([C@H]5O)O)O[C@@H]6[C@H](O[C@@H]([C@@H]([C@H]6O)O)O[C@@H]7[C@H](O[C@@H]([C@@H]([C@H]7O)O)O[C@@H]8[C@H](O[C@H](O2)[C@@H]([C@H]8O)O)CO)CO)CO)CO)CO)CO)O)O)O{rec}{n=1}|CCCCCC(=O)[O-]{lig}{n=1}    -2.280         -5.750 +- 0.584    -3.470   1.00000   1.00000  12.04111  
+---------------------------------------------------------------------------------------------------------------
+#====================================================================#
+#| [94m                  Objective Function Breakdown                  [0m |#
+#| [94m  Target Name              Residual  x  Weight  =  Contribution [0m |#
+#====================================================================#
+host_guest_data               12.04111      1.000 [94m     1.20411e+01[0m 
+Regularization                 0.00000      1.000 [94m     0.00000e+00[0m 
+Total                                             [94m     1.20411e+01[0m 
+----------------------------------------------------------------------
+
+  Step       |k|        |dk|       |grad|       -=X2=-     Delta(X2)    StepQual
+     0   0.000e+00   0.000e+00   5.173e+01[1m   1.20411e+01[0m   0.000e+00      0.000
+
+#========================================================#
+#| [94m                   Total Gradient                   [0m |#
+#========================================================#
+   0 [  5.17297100e+01 ] : GBSA/Atom/radius/[#8:1]
+----------------------------------------------------------
+#========================================================#
+#| [94m                   Total Hessian                    [0m |#
+#========================================================#
+ 1.13117812e+02 
+----------------------------------------------------------
+Calculating nonlinear optimization step
+Finding trust radius: H+0.0000*I, length 4.5731e-01 (target 2.5000e-01)
+Finding trust radius: H+9.0000*I, length 4.2360e-01 (target 2.5000e-01)
+Finding trust radius: H+61.6869*I, length 2.9593e-01 (target 2.5000e-01)
+Finding trust radius: H+246.7477*I, length 1.4375e-01 (target 2.5000e-01)
+Finding trust radius: H+61.6869*I, length 2.9593e-01 (target 2.5000e-01)
+Finding trust radius: H+117.8115*I, length 2.2401e-01 (target 2.5000e-01)
+Finding trust radius: H+161.4984*I, length 1.8837e-01 (target 2.5000e-01)
+Finding trust radius: H+97.8242*I, length 2.4523e-01 (target 2.5000e-01)
+Finding trust radius: H+95.5551*I, length 2.4790e-01 (target 2.5000e-01)
+Finding trust radius: H+93.4677*I, length 2.5040e-01 (target 2.5000e-01)
+Finding trust radius: H+93.7898*I, length 2.5001e-01 (target 2.5000e-01)
+Finding trust radius: H+93.8023*I, length 2.5000e-01 (target 2.5000e-01)
+Finding trust radius: H+93.8010*I, length 2.5000e-01 (target 2.5000e-01)
+Finding trust radius: H+93.8012*I, length 2.5000e-01 (target 2.5000e-01)
+Finding trust radius: H+93.8008*I, length 2.5000e-01 (target 2.5000e-01)
+Trust-radius step found (length 2.5000e-01),  9.3801e+01 added to Hessian diagonal
+#========================================================#
+#| [95m  Mathematical Parameters (Current + Step = Next)   [0m |#
+#========================================================#
+   0 [  0.0000e+00 - 2.5000e-01 = -2.5000e-01 ] : GBSA/Atom/radius/[#8:1]
+----------------------------------------------------------
+#========================================================#
+#| [95m    Physical Parameters (Current + Step = Next)     [0m |#
+#========================================================#
+   0 [  1.5000e-01 - 1.2500e-02 =  1.3750e-01 ] : GBSA/Atom/radius/[#8:1]
+----------------------------------------------------------
+Backing up optimize.sav -> optimize.bak/optimize_1.sav
+Input file with saved parameters: optimize.sav
+#========================================================#
+#| [94m     Iteration 1: Evaluating objective function     [0m |#
+#| [94m        and derivatives through second order        [0m |#
+#========================================================#
+Requesting the estimation of 1 properties, and their gradients with respect to 1 parameters.
+
+1 properties were estimated using the SimulationLayer layer.
+
+
+#=============================================================================================================#
+#| [1;94m                                host_guest_data HostGuestBindingAffinity                                 [0m |#
+#| [1;94m Temperature  Pressure Substance  Reference  Calculated +- Stdev     Delta    Weight    Denom     Term   [0m |#
+#=============================================================================================================#
+  298.15 K 1 atm C([C@@H]1[C@@H]2[C@@H]([C@H]([C@H](O1)O[C@@H]3[C@H](O[C@@H]([C@@H]([C@H]3O)O)O[C@@H]4[C@H](O[C@@H]([C@@H]([C@H]4O)O)O[C@@H]5[C@H](O[C@@H]([C@@H]([C@H]5O)O)O[C@@H]6[C@H](O[C@@H]([C@@H]([C@H]6O)O)O[C@@H]7[C@H](O[C@@H]([C@@H]([C@H]7O)O)O[C@@H]8[C@H](O[C@H](O2)[C@@H]([C@H]8O)O)CO)CO)CO)CO)CO)CO)O)O)O{rec}{n=1}|CCCCCC(=O)[O-]{lig}{n=1}    -2.280         -5.428 +- 0.589    -3.148   1.00000   1.00000   9.90766  
+---------------------------------------------------------------------------------------------------------------
+#===================================================================================#
+#| [94m                         Objective Function Breakdown                          [0m |#
+#| [94m  Target Name              Residual  x  Weight  =  Contribution (Current-Prev) [0m |#
+#===================================================================================#
+host_guest_data                9.90766      1.000 [92m     9.90766e+00[0m ( -2.133e+00 ) 
+Regularization                 0.06250      1.000 [91m     6.25000e-02[0m ( +6.250e-02 ) 
+Total                                             [92m     9.97016e+00[0m ( -2.071e+00 ) 
+-------------------------------------------------------------------------------------
+Backing up result/optimize/openff-2.0.0-GBSA_OBC2-tagged.offxml -> result/optimize/openff-2.0.0-GBSA_OBC2-tagged_2.offxml
+#========================================================================#
+#|  The force field has been written to the result/optimize directory.  |#
+#|    Input file with optimization parameters saved to optimize.sav.    |#
+#========================================================================#
+
+  Step       |k|        |dk|       |grad|       -=X2=-     Delta(X2)    StepQual
+     1   2.500e-01   2.500e-01   1.292e+01[92m   9.97016e+00[0m  -2.071e+00      0.220
+
+#========================================================#
+#| [94m                   Total Gradient                   [0m |#
+#========================================================#
+   0 [  1.29167375e+01 ] : GBSA/Atom/radius/[#8:1]
+----------------------------------------------------------
+#========================================================#
+#| [94m                   Total Hessian                    [0m |#
+#========================================================#
+ 1.10843253e+01 
+----------------------------------------------------------
+Low quality step, reducing trust radius to  2.0833e-01
+Calculating nonlinear optimization step
+Finding trust radius: H+0.0000*I, length 1.1653e+00 (target 2.0833e-01)
+Finding trust radius: H+9.0000*I, length 6.4313e-01 (target 2.0833e-01)
+Finding trust radius: H+61.6869*I, length 1.7750e-01 (target 2.0833e-01)
+Finding trust radius: H+38.1280*I, length 2.6247e-01 (target 2.0833e-01)
+Finding trust radius: H+246.7477*I, length 5.0097e-02 (target 2.0833e-01)
+Finding trust radius: H+61.6869*I, length 1.7750e-01 (target 2.0833e-01)
+Finding trust radius: H+117.8115*I, length 1.0021e-01 (target 2.0833e-01)
+Finding trust radius: H+36.0000*I, length 2.7433e-01 (target 2.0833e-01)
+Finding trust radius: H+60.0619*I, length 1.8155e-01 (target 2.0833e-01)
+Finding trust radius: H+53.5962*I, length 1.9970e-01 (target 2.0833e-01)
+Finding trust radius: H+46.4632*I, length 2.2445e-01 (target 2.0833e-01)
+Finding trust radius: H+51.2739*I, length 2.0714e-01 (target 2.0833e-01)
+Finding trust radius: H+51.0577*I, length 2.0786e-01 (target 2.0833e-01)
+Finding trust radius: H+50.9002*I, length 2.0839e-01 (target 2.0833e-01)
+Finding trust radius: H+50.9155*I, length 2.0833e-01 (target 2.0833e-01)
+Finding trust radius: H+50.9160*I, length 2.0833e-01 (target 2.0833e-01)
+Finding trust radius: H+50.9159*I, length 2.0833e-01 (target 2.0833e-01)
+Finding trust radius: H+50.9162*I, length 2.0833e-01 (target 2.0833e-01)
+Trust-radius step found (length 2.0833e-01),  5.0916e+01 added to Hessian diagonal
+#========================================================#
+#| [95m  Mathematical Parameters (Current + Step = Next)   [0m |#
+#========================================================#
+   0 [ -2.5000e-01 - 2.0833e-01 = -4.5833e-01 ] : GBSA/Atom/radius/[#8:1]
+----------------------------------------------------------
+#========================================================#
+#| [95m    Physical Parameters (Current + Step = Next)     [0m |#
+#========================================================#
+   0 [  1.3750e-01 - 1.0417e-02 =  1.2708e-01 ] : GBSA/Atom/radius/[#8:1]
+----------------------------------------------------------
+Input file with saved parameters: optimize.sav
+#========================================================#
+#| [94m     Iteration 2: Evaluating objective function     [0m |#
+#| [94m        and derivatives through second order        [0m |#
+#========================================================#
+Requesting the estimation of 1 properties, and their gradients with respect to 1 parameters.
+
+1 properties were estimated using the SimulationLayer layer.
+
+
+#=============================================================================================================#
+#| [1;94m                                host_guest_data HostGuestBindingAffinity                                 [0m |#
+#| [1;94m Temperature  Pressure Substance  Reference  Calculated +- Stdev     Delta    Weight    Denom     Term   [0m |#
+#=============================================================================================================#
+  298.15 K 1 atm C([C@@H]1[C@@H]2[C@@H]([C@H]([C@H](O1)O[C@@H]3[C@H](O[C@@H]([C@@H]([C@H]3O)O)O[C@@H]4[C@H](O[C@@H]([C@@H]([C@H]4O)O)O[C@@H]5[C@H](O[C@@H]([C@@H]([C@H]5O)O)O[C@@H]6[C@H](O[C@@H]([C@@H]([C@H]6O)O)O[C@@H]7[C@H](O[C@@H]([C@@H]([C@H]7O)O)O[C@@H]8[C@H](O[C@H](O2)[C@@H]([C@H]8O)O)CO)CO)CO)CO)CO)CO)O)O)O{rec}{n=1}|CCCCCC(=O)[O-]{lig}{n=1}    -2.280         -4.362 +- 0.491    -2.082   1.00000   1.00000   4.33499  
+---------------------------------------------------------------------------------------------------------------
+#===================================================================================#
+#| [94m                         Objective Function Breakdown                          [0m |#
+#| [94m  Target Name              Residual  x  Weight  =  Contribution (Current-Prev) [0m |#
+#===================================================================================#
+host_guest_data                4.33499      1.000 [92m     4.33499e+00[0m ( -5.573e+00 ) 
+Regularization                 0.21007      1.000 [91m     2.10069e-01[0m ( +1.476e-01 ) 
+Total                                             [92m     4.54506e+00[0m ( -5.425e+00 ) 
+-------------------------------------------------------------------------------------
+Backing up result/optimize/openff-2.0.0-GBSA_OBC2-tagged.offxml -> result/optimize/openff-2.0.0-GBSA_OBC2-tagged_3.offxml
+#========================================================================#
+#|  The force field has been written to the result/optimize directory.  |#
+#|    Input file with optimization parameters saved to optimize.sav.    |#
+#========================================================================#
+
+  Step       |k|        |dk|       |grad|       -=X2=-     Delta(X2)    StepQual
+     2   4.583e-01   2.083e-01   1.232e+01[92m   4.54506e+00[0m  -5.425e+00      2.214
+
+#========================================================#
+#| [94m                   Total Gradient                   [0m |#
+#========================================================#
+   0 [  1.23188427e+01 ] : GBSA/Atom/radius/[#8:1]
+----------------------------------------------------------
+#========================================================#
+#| [94m                   Total Hessian                    [0m |#
+#========================================================#
+ 2.22052203e+01 
+----------------------------------------------------------
+Increasing trust radius to  2.5756e-01
+Calculating nonlinear optimization step
+Finding trust radius: H+0.0000*I, length 5.5477e-01 (target 2.5756e-01)
+Finding trust radius: H+9.0000*I, length 3.9477e-01 (target 2.5756e-01)
+Finding trust radius: H+61.6869*I, length 1.4684e-01 (target 2.5756e-01)
+Finding trust radius: H+32.1563*I, length 2.2661e-01 (target 2.5756e-01)
+Finding trust radius: H+32.1563*I, length 2.2661e-01 (target 2.5756e-01)
+Finding trust radius: H+21.6277*I, length 2.8104e-01 (target 2.5756e-01)
+Finding trust radius: H+16.1612*I, length 3.2108e-01 (target 2.5756e-01)
+Finding trust radius: H+26.0624*I, length 2.5522e-01 (target 2.5756e-01)
+Finding trust radius: H+25.9102*I, length 2.5603e-01 (target 2.5756e-01)
+Finding trust radius: H+25.6550*I, length 2.5739e-01 (target 2.5756e-01)
+Finding trust radius: H+25.6228*I, length 2.5757e-01 (target 2.5756e-01)
+Finding trust radius: H+25.6243*I, length 2.5756e-01 (target 2.5756e-01)
+Finding trust radius: H+25.6244*I, length 2.5756e-01 (target 2.5756e-01)
+Finding trust radius: H+25.6245*I, length 2.5756e-01 (target 2.5756e-01)
+Trust-radius step found (length 2.5756e-01),  2.5624e+01 added to Hessian diagonal
+#========================================================#
+#| [95m  Mathematical Parameters (Current + Step = Next)   [0m |#
+#========================================================#
+   0 [ -4.5833e-01 - 2.5756e-01 = -7.1589e-01 ] : GBSA/Atom/radius/[#8:1]
+----------------------------------------------------------
+#========================================================#
+#| [95m    Physical Parameters (Current + Step = Next)     [0m |#
+#========================================================#
+   0 [  1.2708e-01 - 1.2878e-02 =  1.1421e-01 ] : GBSA/Atom/radius/[#8:1]
+----------------------------------------------------------
+Input file with saved parameters: optimize.sav
+#========================================================#
+#| [94m     Iteration 3: Evaluating objective function     [0m |#
+#| [94m        and derivatives through second order        [0m |#
+#========================================================#
+Requesting the estimation of 1 properties, and their gradients with respect to 1 parameters.
+
+1 properties were estimated using the SimulationLayer layer.
+
+
+#=============================================================================================================#
+#| [1;94m                                host_guest_data HostGuestBindingAffinity                                 [0m |#
+#| [1;94m Temperature  Pressure Substance  Reference  Calculated +- Stdev     Delta    Weight    Denom     Term   [0m |#
+#=============================================================================================================#
+  298.15 K 1 atm C([C@@H]1[C@@H]2[C@@H]([C@H]([C@H](O1)O[C@@H]3[C@H](O[C@@H]([C@@H]([C@H]3O)O)O[C@@H]4[C@H](O[C@@H]([C@@H]([C@H]4O)O)O[C@@H]5[C@H](O[C@@H]([C@@H]([C@H]5O)O)O[C@@H]6[C@H](O[C@@H]([C@@H]([C@H]6O)O)O[C@@H]7[C@H](O[C@@H]([C@@H]([C@H]7O)O)O[C@@H]8[C@H](O[C@H](O2)[C@@H]([C@H]8O)O)CO)CO)CO)CO)CO)CO)O)O)O{rec}{n=1}|CCCCCC(=O)[O-]{lig}{n=1}    -2.280         -2.389 +- 0.475    -0.109   1.00000   1.00000   0.01191  
+---------------------------------------------------------------------------------------------------------------
+#===================================================================================#
+#| [94m                         Objective Function Breakdown                          [0m |#
+#| [94m  Target Name              Residual  x  Weight  =  Contribution (Current-Prev) [0m |#
+#===================================================================================#
+host_guest_data                0.01191      1.000 [92m     1.19143e-02[0m ( -4.323e+00 ) 
+Regularization                 0.51250      1.000 [91m     5.12498e-01[0m ( +3.024e-01 ) 
+Total                                             [92m     5.24413e-01[0m ( -4.021e+00 ) 
+-------------------------------------------------------------------------------------
+Backing up result/optimize/openff-2.0.0-GBSA_OBC2-tagged.offxml -> result/optimize/openff-2.0.0-GBSA_OBC2-tagged_4.offxml
+#========================================================================#
+#|  The force field has been written to the result/optimize directory.  |#
+#|    Input file with optimization parameters saved to optimize.sav.    |#
+#========================================================================#
+
+  Step       |k|        |dk|       |grad|       -=X2=-     Delta(X2)    StepQual
+     3   7.159e-01   2.576e-01   4.149e-01[92m   5.24413e-01[0m  -4.021e+00      1.650
+
+#========================================================#
+#| [94m                   Total Gradient                   [0m |#
+#========================================================#
+   0 [ -4.14866690e-01 ] : GBSA/Atom/radius/[#8:1]
+----------------------------------------------------------
+#========================================================#
+#| [94m                   Total Hessian                    [0m |#
+#========================================================#
+ 4.53980501e+01 
+----------------------------------------------------------
+Increasing trust radius to  3.0753e-01
+Calculating nonlinear optimization step
+Newton-Raphson step found (length 9.1384e-03)
+Convergence criterion reached in step size (1.00e-01)
+#========================================================#
+#| [92m               [0m[1mOptimization Converged[0m               [0m |#
+#| [92m           Final objective function value           [0m |#
+#| [92m  Full:  5.244127e-01  Un-penalized:  1.191427e-02  [0m |#
+#========================================================#
+#========================================================#
+#| [94m           Final optimization parameters:           [0m |#
+#========================================================#
+   0 [ -7.0675e-01 ] : GBSA/Atom/radius/[#8:1]
+#========================================================#
+#| [94m             Final physical parameters:             [0m |#
+#========================================================#
+   0 [  1.1466e-01 ] : GBSA/Atom/radius/[#8:1]
+----------------------------------------------------------
+Backing up result/optimize/openff-2.0.0-GBSA_OBC2-tagged.offxml -> result/optimize/openff-2.0.0-GBSA_OBC2-tagged_5.offxml
+#========================================================================#
+#|  The force field has been written to the result/optimize directory.  |#
+#|    Input file with optimization parameters saved to optimize.sav.    |#
+#========================================================================#
+Wall time since calculation start: 16851.0 seconds
+#========================================================#
+#| [1;44;93m               Calculation Finished.                [0m |#
+#| [1;44;93m     ---==(  May the Force be with you!  )==---     [0m |#
+#========================================================#

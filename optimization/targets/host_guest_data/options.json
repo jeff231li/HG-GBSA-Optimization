@@ -1,0 +1,1736 @@
+{
+    "connection_options": {
+        "server_address": "localhost",
+        "server_port": 3241
+    },
+    "data_set_path": "training_set.json",
+    "denominators": {
+        "HostGuestBindingAffinity": {
+            "@type": "openff.evaluator.unit.Quantity",
+            "unit": "kcal / mol",
+            "value": 1.0
+        }
+    },
+    "estimation_options": {
+        "batch_mode": {
+            "@type": "openff.evaluator.client.client.BatchMode",
+            "value": "SharedComponents"
+        },
+        "calculation_layers": [
+            "SimulationLayer"
+        ],
+        "calculation_schemas": {
+            "HostGuestBindingAffinity": {
+                "SimulationLayer": {
+                    "@type": "openff.evaluator.layers.simulation.SimulationSchema",
+                    "workflow_schema": {
+                        "@type": "openff.evaluator.workflow.schemas.WorkflowSchema",
+                        "final_value_source": {
+                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                            "full_path": "total_free_energy.result"
+                        },
+                        "protocol_replicators": [
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolReplicator",
+                                "id": "orientation_replicator",
+                                "template_values": {
+                                    "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                    "full_path": "global.guest_orientations"
+                                }
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolReplicator",
+                                "id": "pull_replicator_$(orientation_replicator)",
+                                "template_values": {
+                                    "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                    "full_path": "global.pull_windows_indices"
+                                }
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolReplicator",
+                                "id": "attach_replicator_$(orientation_replicator)",
+                                "template_values": {
+                                    "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                    "full_path": "global.attach_windows_indices"
+                                }
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolReplicator",
+                                "id": "release_replicator",
+                                "template_values": {
+                                    "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                    "full_path": "global.release_windows_indices"
+                                }
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolReplicator",
+                                "id": "bound_replicator_$(orientation_replicator)",
+                                "template_values": {
+                                    "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                    "full_path": "global.bound_window_index"
+                                }
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolReplicator",
+                                "id": "unbound_replicator_$(orientation_replicator)",
+                                "template_values": {
+                                    "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                    "full_path": "global.unbound_window_index"
+                                }
+                            }
+                        ],
+                        "protocol_schemas": [
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "pull_align_coordinates_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".complex_file_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.guest_orientations[$(orientation_replicator)].coordinate_path"
+                                    },
+                                    ".guest_orientation_mask": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.guest_orientation_mask"
+                                    },
+                                    ".n_pull_windows": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.n_pull_windows"
+                                    },
+                                    ".pull_distance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.pull_distance"
+                                    },
+                                    ".pull_window_index": {
+                                        "@type": "openff.evaluator.workflow.utils.ReplicatorValue",
+                                        "replicator_id": "pull_replicator_$(orientation_replicator)"
+                                    },
+                                    ".remove_pbc_vectors": true,
+                                    ".substance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.substance"
+                                    }
+                                },
+                                "type": "PreparePullCoordinates"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "pull_apply_parameters_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".coordinate_file_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_align_coordinates_0_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".enable_hmr": false,
+                                    ".force_field_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.force_field_path"
+                                    },
+                                    ".guest_file_paths": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.guest_file_paths"
+                                    },
+                                    ".host_file_paths": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.host_file_paths"
+                                    },
+                                    ".substance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.substance"
+                                    }
+                                },
+                                "type": "PaprikaBuildSystem"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "pull_add_dummy_atoms_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".implicit_simulation": true,
+                                    ".input_coordinate_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_align_coordinates_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".input_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_apply_parameters_$(orientation_replicator).parameterized_system"
+                                    },
+                                    ".offset": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.dummy_atom_offset"
+                                    },
+                                    ".substance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.substance"
+                                    }
+                                },
+                                "type": "AddDummyAtoms"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "attach_generate_restraints_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".attach_lambdas": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.attach_lambdas"
+                                    },
+                                    ".complex_coordinate_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_add_dummy_atoms_0_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".restraint_schemas": {
+                                        "conformational": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_orientations[$(orientation_replicator)].conformational_restraints"
+                                        },
+                                        "guest": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_restraints"
+                                        },
+                                        "static": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_orientations[$(orientation_replicator)].static_restraints"
+                                        },
+                                        "symmetry": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.symmetry_restraints"
+                                        },
+                                        "wall": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.wall_restraints"
+                                        }
+                                    }
+                                },
+                                "type": "GenerateAttachRestraints"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "attach_apply_restraints_$(attach_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".input_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_add_dummy_atoms_0_$(orientation_replicator).output_system"
+                                    },
+                                    ".phase": "attach",
+                                    ".restraints_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "attach_generate_restraints_$(orientation_replicator).restraints_path"
+                                    },
+                                    ".window_index": {
+                                        "@type": "openff.evaluator.workflow.utils.ReplicatorValue",
+                                        "replicator_id": "attach_replicator_$(orientation_replicator)"
+                                    }
+                                },
+                                "type": "ApplyRestraints"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "pull_generate_restraints_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".attach_lambdas": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.attach_lambdas"
+                                    },
+                                    ".complex_coordinate_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_add_dummy_atoms_0_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".n_pull_windows": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.n_pull_windows"
+                                    },
+                                    ".restraint_schemas": {
+                                        "conformational": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_orientations[$(orientation_replicator)].conformational_restraints"
+                                        },
+                                        "guest": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_restraints"
+                                        },
+                                        "static": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_orientations[$(orientation_replicator)].static_restraints"
+                                        },
+                                        "symmetry": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.symmetry_restraints"
+                                        },
+                                        "wall": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.wall_restraints"
+                                        }
+                                    }
+                                },
+                                "type": "GeneratePullRestraints"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "pull_apply_restraints_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".input_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_add_dummy_atoms_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".phase": "pull",
+                                    ".restraints_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_generate_restraints_$(orientation_replicator).restraints_path"
+                                    },
+                                    ".window_index": {
+                                        "@type": "openff.evaluator.workflow.utils.ReplicatorValue",
+                                        "replicator_id": "pull_replicator_$(orientation_replicator)"
+                                    }
+                                },
+                                "type": "ApplyRestraints"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "attach_energy_minimization_$(attach_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".enable_pbc": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_add_dummy_atoms_0_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".max_iterations": 0,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "attach_apply_restraints_$(attach_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".tolerance": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "kJ / mol / nm",
+                                        "value": 10.0
+                                    }
+                                },
+                                "type": "OpenMMEnergyMinimisation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "attach_thermalization_$(attach_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": [],
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "attach_energy_minimization_$(attach_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".output_frequency": 10000,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "attach_apply_restraints_$(attach_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".steps_per_iteration": 25000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 1.0
+                                    },
+                                    ".total_number_of_iterations": 1
+                                },
+                                "type": "OpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "attach_equilibration_$(attach_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": [],
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "attach_thermalization_$(attach_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".output_frequency": 10000,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "attach_apply_restraints_$(attach_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".steps_per_iteration": 100000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 2.0
+                                    },
+                                    ".total_number_of_iterations": 1
+                                },
+                                "type": "OpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "attach_production_$(attach_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".convergence_criteria": null,
+                                    ".convergence_tolerance": null,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.parameter_gradient_keys"
+                                    },
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "attach_equilibration_$(attach_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".lambda_scaling": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.lambda_scaling"
+                                    },
+                                    ".max_number_of_steps": null,
+                                    ".number_of_extra_steps": null,
+                                    ".output_frequency": 2500,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "attach_apply_restraints_$(attach_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".phase": "attach",
+                                    ".pristine_system": null,
+                                    ".restraints_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "attach_generate_restraints_$(orientation_replicator).restraints_path"
+                                    },
+                                    ".steps_per_iteration": 500000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 2.0
+                                    },
+                                    ".total_number_of_iterations": 1,
+                                    ".window_number": {
+                                        "@type": "openff.evaluator.workflow.utils.ReplicatorValue",
+                                        "replicator_id": "attach_replicator_$(orientation_replicator)"
+                                    }
+                                },
+                                "type": "PaprikaOpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "pull_energy_minimization_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".enable_pbc": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_add_dummy_atoms_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".max_iterations": 0,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_apply_restraints_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".tolerance": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "kJ / mol / nm",
+                                        "value": 10.0
+                                    }
+                                },
+                                "type": "OpenMMEnergyMinimisation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "pull_thermalization_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": [],
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_energy_minimization_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".output_frequency": 10000,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_apply_restraints_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".steps_per_iteration": 25000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 1.0
+                                    },
+                                    ".total_number_of_iterations": 1
+                                },
+                                "type": "OpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "pull_equilibration_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": [],
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_thermalization_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".output_frequency": 10000,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_apply_restraints_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".steps_per_iteration": 100000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 2.0
+                                    },
+                                    ".total_number_of_iterations": 1
+                                },
+                                "type": "OpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "pull_production_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".convergence_criteria": null,
+                                    ".convergence_tolerance": null,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.parameter_gradient_keys"
+                                    },
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_equilibration_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".lambda_scaling": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.lambda_scaling"
+                                    },
+                                    ".max_number_of_steps": null,
+                                    ".number_of_extra_steps": null,
+                                    ".output_frequency": 2500,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_apply_restraints_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".phase": "pull",
+                                    ".pristine_system": null,
+                                    ".restraints_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_generate_restraints_$(orientation_replicator).restraints_path"
+                                    },
+                                    ".steps_per_iteration": 500000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 2.0
+                                    },
+                                    ".total_number_of_iterations": 1,
+                                    ".window_number": {
+                                        "@type": "openff.evaluator.workflow.utils.ReplicatorValue",
+                                        "replicator_id": "pull_replicator_$(orientation_replicator)"
+                                    }
+                                },
+                                "type": "PaprikaOpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "analyze_attach_phase_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".phase": "attach",
+                                    ".restraints_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "attach_generate_restraints_$(orientation_replicator).restraints_path"
+                                    },
+                                    ".topology_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_add_dummy_atoms_0_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".trajectory_paths": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "attach_production_$(attach_replicator_$(orientation_replicator))_$(orientation_replicator).trajectory_file_path"
+                                    }
+                                },
+                                "type": "AnalyzeAPRPhase"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "analyze_pull_phase_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".phase": "pull",
+                                    ".restraints_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_generate_restraints_$(orientation_replicator).restraints_path"
+                                    },
+                                    ".topology_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_add_dummy_atoms_0_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".trajectory_paths": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_production_$(pull_replicator_$(orientation_replicator))_$(orientation_replicator).trajectory_file_path"
+                                    }
+                                },
+                                "type": "AnalyzeAPRPhase"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "pull_reference_work_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".restraints_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "pull_generate_restraints_$(orientation_replicator).restraints_path"
+                                    },
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    }
+                                },
+                                "type": "ComputeReferenceWork"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "release_align_coordinates",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".complex_file_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.host_coordinate_path"
+                                    },
+                                    ".remove_pbc_vectors": true,
+                                    ".substance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.host_substance"
+                                    }
+                                },
+                                "type": "PrepareReleaseCoordinates"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "release_apply_parameters",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".coordinate_file_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_align_coordinates.output_coordinate_path"
+                                    },
+                                    ".enable_hmr": false,
+                                    ".force_field_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.force_field_path"
+                                    },
+                                    ".guest_file_paths": null,
+                                    ".host_file_paths": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.host_file_paths"
+                                    },
+                                    ".substance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.host_substance"
+                                    }
+                                },
+                                "type": "PaprikaBuildSystem"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "release_add_dummy_atoms",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".implicit_simulation": true,
+                                    ".input_coordinate_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_align_coordinates.output_coordinate_path"
+                                    },
+                                    ".input_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_apply_parameters.parameterized_system"
+                                    },
+                                    ".offset": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.dummy_atom_offset"
+                                    },
+                                    ".substance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.host_substance"
+                                    }
+                                },
+                                "type": "AddDummyAtoms"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "release_generate_restraints_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".host_coordinate_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_add_dummy_atoms.output_coordinate_path"
+                                    },
+                                    ".release_lambdas": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.release_lambdas"
+                                    },
+                                    ".restraint_schemas": {
+                                        "conformational": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_orientations[$(orientation_replicator)].conformational_restraints"
+                                        },
+                                        "guest": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_restraints"
+                                        },
+                                        "static": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_orientations[$(orientation_replicator)].static_restraints"
+                                        },
+                                        "symmetry": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.symmetry_restraints"
+                                        },
+                                        "wall": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.wall_restraints"
+                                        }
+                                    }
+                                },
+                                "type": "GenerateReleaseRestraints"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "release_apply_restraints_$(release_replicator)_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".input_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_add_dummy_atoms.output_system"
+                                    },
+                                    ".phase": "release",
+                                    ".restraints_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_generate_restraints_$(orientation_replicator).restraints_path"
+                                    },
+                                    ".window_index": {
+                                        "@type": "openff.evaluator.workflow.utils.ReplicatorValue",
+                                        "replicator_id": "release_replicator"
+                                    }
+                                },
+                                "type": "ApplyRestraints"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "release_energy_minimization_$(release_replicator)_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".enable_pbc": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_add_dummy_atoms.output_coordinate_path"
+                                    },
+                                    ".max_iterations": 0,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_apply_restraints_$(release_replicator)_$(orientation_replicator).output_system"
+                                    },
+                                    ".tolerance": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "kJ / mol / nm",
+                                        "value": 10.0
+                                    }
+                                },
+                                "type": "OpenMMEnergyMinimisation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "release_thermalization_$(release_replicator)_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": [],
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_energy_minimization_$(release_replicator)_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".output_frequency": 10000,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_apply_restraints_$(release_replicator)_$(orientation_replicator).output_system"
+                                    },
+                                    ".steps_per_iteration": 25000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 1.0
+                                    },
+                                    ".total_number_of_iterations": 1
+                                },
+                                "type": "OpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "release_equilibration_$(release_replicator)_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": [],
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_thermalization_$(release_replicator)_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".output_frequency": 10000,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_apply_restraints_$(release_replicator)_$(orientation_replicator).output_system"
+                                    },
+                                    ".steps_per_iteration": 100000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 2.0
+                                    },
+                                    ".total_number_of_iterations": 1
+                                },
+                                "type": "OpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "release_production_$(release_replicator)_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".convergence_criteria": null,
+                                    ".convergence_tolerance": null,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.parameter_gradient_keys"
+                                    },
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_equilibration_$(release_replicator)_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".lambda_scaling": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.lambda_scaling"
+                                    },
+                                    ".max_number_of_steps": null,
+                                    ".number_of_extra_steps": null,
+                                    ".output_frequency": 2500,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_apply_restraints_$(release_replicator)_$(orientation_replicator).output_system"
+                                    },
+                                    ".phase": "release",
+                                    ".pristine_system": null,
+                                    ".restraints_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_generate_restraints_$(orientation_replicator).restraints_path"
+                                    },
+                                    ".steps_per_iteration": 500000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 2.0
+                                    },
+                                    ".total_number_of_iterations": 1,
+                                    ".window_number": {
+                                        "@type": "openff.evaluator.workflow.utils.ReplicatorValue",
+                                        "replicator_id": "release_replicator"
+                                    }
+                                },
+                                "type": "PaprikaOpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "analyze_release_phase_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".phase": "release",
+                                    ".restraints_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_generate_restraints_$(orientation_replicator).restraints_path"
+                                    },
+                                    ".topology_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_add_dummy_atoms.output_coordinate_path"
+                                    },
+                                    ".trajectory_paths": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "release_production_$(release_replicator)_$(orientation_replicator).trajectory_file_path"
+                                    }
+                                },
+                                "type": "AnalyzeAPRPhase"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_bound_align_coordinates_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".complex_file_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.guest_orientations[$(orientation_replicator)].coordinate_path"
+                                    },
+                                    ".guest_orientation_mask": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.guest_orientation_mask"
+                                    },
+                                    ".n_pull_windows": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.n_pull_windows"
+                                    },
+                                    ".pull_distance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.pull_distance"
+                                    },
+                                    ".pull_window_index": {
+                                        "@type": "openff.evaluator.workflow.utils.ReplicatorValue",
+                                        "replicator_id": "bound_replicator_$(orientation_replicator)"
+                                    },
+                                    ".remove_pbc_vectors": true,
+                                    ".substance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.substance"
+                                    }
+                                },
+                                "type": "PreparePullCoordinates"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_unbound_align_coordinates_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".complex_file_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.guest_orientations[$(orientation_replicator)].coordinate_path"
+                                    },
+                                    ".guest_orientation_mask": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.guest_orientation_mask"
+                                    },
+                                    ".n_pull_windows": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.n_pull_windows"
+                                    },
+                                    ".pull_distance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.pull_distance"
+                                    },
+                                    ".pull_window_index": {
+                                        "@type": "openff.evaluator.workflow.utils.ReplicatorValue",
+                                        "replicator_id": "unbound_replicator_$(orientation_replicator)"
+                                    },
+                                    ".remove_pbc_vectors": true,
+                                    ".substance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.substance"
+                                    }
+                                },
+                                "type": "PreparePullCoordinates"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_bound_apply_parameters_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".coordinate_file_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_align_coordinates_0_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".enable_hmr": false,
+                                    ".force_field_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.force_field_path"
+                                    },
+                                    ".guest_file_paths": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.guest_file_paths"
+                                    },
+                                    ".host_file_paths": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.host_file_paths"
+                                    },
+                                    ".substance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.substance"
+                                    }
+                                },
+                                "type": "PaprikaBuildSystem"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_bound_add_dummy_atoms_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".implicit_simulation": true,
+                                    ".input_coordinate_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_align_coordinates_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".input_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_apply_parameters_$(orientation_replicator).parameterized_system"
+                                    },
+                                    ".offset": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.dummy_atom_offset"
+                                    },
+                                    ".substance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.substance"
+                                    }
+                                },
+                                "type": "AddDummyAtoms"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_unbound_add_dummy_atoms_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".implicit_simulation": true,
+                                    ".input_coordinate_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_align_coordinates_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".input_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_apply_parameters_$(orientation_replicator).parameterized_system"
+                                    },
+                                    ".offset": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.dummy_atom_offset"
+                                    },
+                                    ".substance": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.substance"
+                                    }
+                                },
+                                "type": "AddDummyAtoms"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_bound_generate_restraints_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".attach_lambdas": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.attach_lambdas"
+                                    },
+                                    ".complex_coordinate_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_add_dummy_atoms_0_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".restraint_schemas": {
+                                        "conformational": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_orientations[$(orientation_replicator)].conformational_restraints"
+                                        },
+                                        "guest": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_restraints"
+                                        },
+                                        "static": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_orientations[$(orientation_replicator)].static_restraints"
+                                        },
+                                        "symmetry": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.symmetry_restraints"
+                                        },
+                                        "wall": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.wall_restraints"
+                                        }
+                                    }
+                                },
+                                "type": "GenerateBoundRestraints"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_unbound_generate_restraints_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".attach_lambdas": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.attach_lambdas"
+                                    },
+                                    ".complex_coordinate_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_add_dummy_atoms_0_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".n_pull_windows": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.n_pull_windows"
+                                    },
+                                    ".restraint_schemas": {
+                                        "guest": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_restraints"
+                                        },
+                                        "static": {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "global.guest_orientations[$(orientation_replicator)].static_restraints"
+                                        }
+                                    }
+                                },
+                                "type": "GenerateUnboundRestraints"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_bound_apply_restraints_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".input_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_add_dummy_atoms_0_$(orientation_replicator).output_system"
+                                    },
+                                    ".phase": "attach",
+                                    ".restraints_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_generate_restraints_$(orientation_replicator).restraints_path"
+                                    },
+                                    ".window_index": 0
+                                },
+                                "type": "ApplyRestraints"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_unbound_apply_restraints_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".input_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_add_dummy_atoms_0_$(orientation_replicator).output_system"
+                                    },
+                                    ".phase": "pull",
+                                    ".restraints_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_generate_restraints_$(orientation_replicator).restraints_path"
+                                    },
+                                    ".window_index": -1
+                                },
+                                "type": "ApplyRestraints"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_bound_energy_minimization_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".enable_pbc": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_add_dummy_atoms_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".max_iterations": 0,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_apply_restraints_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".tolerance": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "kJ / mol / nm",
+                                        "value": 10.0
+                                    }
+                                },
+                                "type": "OpenMMEnergyMinimisation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_bound_thermalization_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": [],
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_energy_minimization_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".output_frequency": 10000,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_apply_restraints_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".steps_per_iteration": 25000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 1.0
+                                    },
+                                    ".total_number_of_iterations": 1
+                                },
+                                "type": "OpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_bound_equilibration_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": [],
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_thermalization_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".output_frequency": 10000,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_apply_restraints_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".steps_per_iteration": 100000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 2.0
+                                    },
+                                    ".total_number_of_iterations": 1
+                                },
+                                "type": "OpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_bound_production_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".convergence_criteria": null,
+                                    ".convergence_tolerance": null,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.parameter_gradient_keys"
+                                    },
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_equilibration_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".lambda_scaling": null,
+                                    ".max_number_of_steps": null,
+                                    ".number_of_extra_steps": null,
+                                    ".output_frequency": 2500,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_apply_restraints_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".phase": "state_bound",
+                                    ".pristine_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_apply_parameters_$(orientation_replicator).parameterized_system"
+                                    },
+                                    ".restraints_path": null,
+                                    ".steps_per_iteration": 5000000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 2.0
+                                    },
+                                    ".total_number_of_iterations": 1,
+                                    ".window_number": null
+                                },
+                                "type": "PaprikaOpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_unbound_energy_minimization_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".enable_pbc": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_add_dummy_atoms_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".max_iterations": 0,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_apply_restraints_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".tolerance": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "kJ / mol / nm",
+                                        "value": 10.0
+                                    }
+                                },
+                                "type": "OpenMMEnergyMinimisation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_unbound_thermalization_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": [],
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_energy_minimization_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".output_frequency": 10000,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_apply_restraints_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".steps_per_iteration": 25000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 1.0
+                                    },
+                                    ".total_number_of_iterations": 1
+                                },
+                                "type": "OpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_unbound_equilibration_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": [],
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_thermalization_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".output_frequency": 10000,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_apply_restraints_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".steps_per_iteration": 100000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 2.0
+                                    },
+                                    ".total_number_of_iterations": 1
+                                },
+                                "type": "OpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_unbound_production_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_gpu_platforms": true,
+                                    ".allow_merging": true,
+                                    ".checkpoint_frequency": 10,
+                                    ".convergence_criteria": null,
+                                    ".convergence_tolerance": null,
+                                    ".enable_pbc": false,
+                                    ".ensemble": {
+                                        "@type": "openff.evaluator.thermodynamics.Ensemble",
+                                        "value": "NVT"
+                                    },
+                                    ".gradient_parameters": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.parameter_gradient_keys"
+                                    },
+                                    ".high_precision": false,
+                                    ".input_coordinate_file": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_equilibration_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_file"
+                                    },
+                                    ".lambda_scaling": null,
+                                    ".max_number_of_steps": null,
+                                    ".number_of_extra_steps": null,
+                                    ".output_frequency": 2500,
+                                    ".parameterized_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_apply_restraints_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator).output_system"
+                                    },
+                                    ".phase": "state_unbound",
+                                    ".pristine_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_apply_parameters_$(orientation_replicator).parameterized_system"
+                                    },
+                                    ".restraints_path": null,
+                                    ".steps_per_iteration": 5000000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".thermostat_friction": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "1 / ps",
+                                        "value": 1.0
+                                    },
+                                    ".timestep": {
+                                        "@type": "openff.evaluator.unit.Quantity",
+                                        "unit": "fs",
+                                        "value": 2.0
+                                    },
+                                    ".total_number_of_iterations": 1,
+                                    ".window_number": null
+                                },
+                                "type": "PaprikaOpenMMSimulation"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "symmetry_correction",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".n_microstates": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.n_guest_microstates"
+                                    },
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    }
+                                },
+                                "type": "ComputeSymmetryCorrection"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "orientation_free_energy_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".values": [
+                                        {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "analyze_attach_phase_$(orientation_replicator).result"
+                                        },
+                                        {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "analyze_pull_phase_$(orientation_replicator).result"
+                                        },
+                                        {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "pull_reference_work_$(orientation_replicator).result"
+                                        },
+                                        {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "analyze_release_phase_$(orientation_replicator).result"
+                                        },
+                                        {
+                                            "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                            "full_path": "symmetry_correction.result"
+                                        }
+                                    ]
+                                },
+                                "type": "AddValues"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_bound_gradient_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".enable_pbc": false,
+                                    ".gradient_parameters": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.parameter_gradient_keys"
+                                    },
+                                    ".input_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_apply_parameters_$(orientation_replicator).parameterized_system"
+                                    },
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".topology_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_add_dummy_atoms_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".trajectory_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_production_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator).trajectory_file_path"
+                                    }
+                                },
+                                "type": "ComputePotentialEnergyGradient"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "state_unbound_gradient_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".enable_pbc": false,
+                                    ".gradient_parameters": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.parameter_gradient_keys"
+                                    },
+                                    ".input_system": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_apply_parameters_$(orientation_replicator).parameterized_system"
+                                    },
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".topology_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_add_dummy_atoms_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator).output_coordinate_path"
+                                    },
+                                    ".trajectory_path": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_production_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator).trajectory_file_path"
+                                    }
+                                },
+                                "type": "ComputePotentialEnergyGradient"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "free_energy_gradient_$(orientation_replicator)",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".bound_state_gradients": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_bound_gradient_$(bound_replicator_$(orientation_replicator))_$(orientation_replicator).potential_energy_gradients"
+                                    },
+                                    ".orientation_free_energy": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "orientation_free_energy_$(orientation_replicator).result"
+                                    },
+                                    ".unbound_state_gradients": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "state_unbound_gradient_$(unbound_replicator_$(orientation_replicator))_$(orientation_replicator).potential_energy_gradients"
+                                    }
+                                },
+                                "type": "ComputeFreeEnergyGradient"
+                            },
+                            {
+                                "@type": "openff.evaluator.workflow.schemas.ProtocolSchema",
+                                "id": "total_free_energy",
+                                "inputs": {
+                                    ".allow_merging": true,
+                                    ".bootstrap_cycles": 2000,
+                                    ".thermodynamic_state": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "global.thermodynamic_state"
+                                    },
+                                    ".values": {
+                                        "@type": "openff.evaluator.workflow.utils.ProtocolPath",
+                                        "full_path": "free_energy_gradient_$(orientation_replicator).result"
+                                    }
+                                },
+                                "type": "AverageFreeEnergies"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "polling_interval": 600,
+    "weights": {
+        "HostGuestBindingAffinity": 1.0
+    }
+}
