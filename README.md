@@ -41,7 +41,12 @@ Next, download a forked version of ForceBalance in a different folder
 git clone https://github.com/jeff231li/forcebalance.git
 ```
 
-and install the repository in the conda environment
+and checkout to the evaluator-paprika-tleap branch
+```bash
+git checkout evaluator-paprika-tleap
+```
+
+Finally, install the repository in the conda environment
 
 ```bash
 python setup.py install
