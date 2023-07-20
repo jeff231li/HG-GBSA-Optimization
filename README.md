@@ -3,9 +3,9 @@ This repository contains files for running force field optimization fitted to ho
 
 
 ## Dependencies
-There are a few additional packages that is required to run the scripts in this repository. In particular, the `openeye-toolkits` package is needed to run the host-guest binding calculations in `openff-evaluator`. In addition, we will need a forked version of ForceBalance/
+There are a few additional packages that is required to run the scripts in this repository. In particular, the `openeye-toolkits` package is needed to run the host-guest binding calculations in `openff-evaluator`. In addition, we will need ForceBalance for the optimization.
 * openeye-toolkits
-* ForceBalance ([forked version](https://github.com/jeff231li/forcebalance))
+* [ForceBalance](https://github.com/leeping/forcebalance)
 
 ## Installation instructions
 Get the `openff-evaluator` package from the OpenFF GitHub repository
@@ -38,12 +38,7 @@ conda install -c openeye openeye-toolkits
 
 Next, download a forked version of ForceBalance in a different folder
 ```bash
-git clone https://github.com/jeff231li/forcebalance.git
-```
-
-and checkout to the evaluator-paprika-tleap branch
-```bash
-git checkout evaluator-paprika-tleap
+git clone https://github.com/leeping/forcebalance.git
 ```
 
 Finally, install the repository in the conda environment
