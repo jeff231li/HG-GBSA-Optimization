@@ -122,5 +122,5 @@ Then you will need to install OpenFF-Evaluator, pAPRika, and Taproom as previous
   * `02-benchmark`/: The files I used to run the test set calculations in OpenFF-Evaluator (without ForceBalance)
 * `tutorial`/: The files for the short tutorial, which is presented in the Open Force Field blog post (https://openforcefield.org/community/news/science-updates/fitting_gbsa_parameters-openff-2022-08-29/). 
   * `01-optimization`/: The files and output (trajectories excluded) from the ForceBalance optimization of oxygen GB radii to $\beta$CD-hexanoate.
-  * `02-benchmark`/: The files and output (trajetories excluded) from running OpenFF-Evaluator to benchmark the original and optimized GB radii to three other host-guest complexes.
+  * `02-benchmark`/: The files and output (trajectories excluded) from running OpenFF-Evaluator to benchmark the original and optimized GB radii to three other host-guest complexes.
   * `blog-tutorial.pdf`: A document explaining the tutorial of running the ForceBalance optimization.
