@@ -21,11 +21,15 @@ def main():
     setup_timestamp_logging()
     server_port = 3241
 
-    # Define the force field.
+    # This is with the original mBondi2 radii
     GBSA = resource_filename(
         "openff.toolkit",
         os.path.join("data", "test_forcefields", "GBSA_OBC2-1.0.offxml"),
     )
+    # This is with the HG-optimized radii
+    GBSA = "GBSA-OBC2-HG-optimized.offxml"
+
+    # Define the force field.
     force_field = ForceField("openff-2.0.0.offxml", GBSA)
     force_field_source = SmirnoffForceFieldSource.from_object(force_field)
 

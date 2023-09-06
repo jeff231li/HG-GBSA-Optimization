@@ -112,3 +112,15 @@ Then you will need to install OpenFF-Evaluator, pAPRika, and Taproom as previous
 
 
 ## Manifest 
+* `installation_files`/: Contains YAML files that can be used to install the dependencies in a conda environment. I also included the YAML files for dask, which works on the machines I tested. You may need to edit these files if you want to use them in your machine.
+  * `paprika_implicit_paper.yaml` - exported conda environment on my machine.
+  * `dask.yaml`: YAML file that configures the settings for Dask.
+  * `jobqueue.yaml`: YAML file that configures the settings for clusters with Dask.
+  * `distributed.yaml`: YAML file that configures the distributed task scheduler for Dask.
+* `paper_simulations`/: Here I included the files I used to run the ForceBalance optimization of the 36 host-guest complexes and test set benchmark with 90 host-guest complexes. 
+  * `01-optimization`/: The scripts to run the 36 host-guest optimization run with ForceBalance.
+  * `02-benchmark`/: The files I used to run the test set calculations in OpenFF-Evaluator (without ForceBalance)
+* `tutorial`/: The files for the short tutorial, which is presented in the Open Force Field blog post (https://openforcefield.org/community/news/science-updates/fitting_gbsa_parameters-openff-2022-08-29/). 
+  * `01-optimization`/: The files and output (trajectories excluded) from the ForceBalance optimization of oxygen GB radii to $\beta$CD-hexanoate.
+  * `02-benchmark`/: The files and output (trajetories excluded) from running OpenFF-Evaluator to benchmark the original and optimized GB radii to three other host-guest complexes.
+  * `blog-tutorial.pdf`: A document explaining the tutorial of running the ForceBalance optimization.
