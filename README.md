@@ -1,7 +1,7 @@
 # HG-GBSA-Optimization
 This repository contains files for running force field optimization fitted to host-guest binding data using [OpenFF-Evaluator](https://github.com/openforcefield/openff-evaluator) and [ForceBalance](https://github.com/leeping/forcebalance). This is part of the work of optimizing generalized Born surface area (GBSA) parameters to host-guest systems, detailed in the paper titled *"Tuning Potential Functions to Host-Guest Binding Data"*. Below, I will detail the installation process of the main program and the dependencies. 
 
-I have provided a short tutorial demonstrating the optimization of the generalized Born radius of oxygen atom to fit the binding free energy $\Delta G_{\rm b}$ of $\beta$-cyclodextrin ($\beta$CD) with hexanoate acid compiled in [Taproom](https://github.com/slochower/host-guest-benchmarks). The binding free energy $\Delta G_{\rm b}$ is estimated with the attach-pull-release (APR) method using the [pAPRika](https://github.com/slochower/pAPRika) package. This short tutorial was presented in an [Open Force Field blog](https://openforcefield.org/community/news/science-updates/fitting_gbsa_parameters-openff-2022-08-29/).
+I have included a short tutorial demonstrating the optimization of the generalized Born radius of oxygen atom to fit the binding free energy $\Delta G_{\rm b}$ of $\beta$-cyclodextrin ($\beta$CD) with hexanoate acid compiled in [Taproom](https://github.com/slochower/host-guest-benchmarks). The binding free energy $\Delta G_{\rm b}$ is estimated with the attach-pull-release (APR) method using the [pAPRika](https://github.com/slochower/pAPRika) package. This short tutorial was presented in an [Open Force Field blog](https://openforcefield.org/community/news/science-updates/fitting_gbsa_parameters-openff-2022-08-29/).
 
 
 ## Dependencies
@@ -109,3 +109,6 @@ conda env create -f paprika_implicit_paper.yaml python=3.9
 Then you will need to install OpenFF-Evaluator, pAPRika, and Taproom as previously, i.e. by `git clone` and `pip install .` in the newly created environment.
 
 > **_NOTE:_** I have also included in this repository my yaml files for **Dask** (`dask.yaml`, `distributed.yaml`, and `jobqueue.yaml`). If you are having issues with Dask when you run the Python script, copy these files to `~/.config/dask/`. 
+
+
+## Manifest 
