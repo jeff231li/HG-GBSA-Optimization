@@ -2,7 +2,7 @@ import os
 import subprocess as sp
 
 from forcebalance.evaluator_io import Evaluator_SMIRNOFF
-from openff.evaluator import unit
+from openff.units import unit
 from openff.evaluator.backends import ComputeResources
 from openff.evaluator.backends.dask import DaskLocalCluster
 from openff.evaluator.client import ConnectionOptions, RequestOptions

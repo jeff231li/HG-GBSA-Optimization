@@ -1,6 +1,6 @@
 import os
 
-from openff.evaluator import unit
+from openff.units import unit
 from openff.evaluator.backends import ComputeResources
 from openff.evaluator.backends.dask import DaskLocalCluster
 from openff.evaluator.client import ConnectionOptions, EvaluatorClient, RequestOptions
